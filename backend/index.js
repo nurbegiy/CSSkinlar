@@ -25,6 +25,10 @@ const app = express();
 app.use(cors({ origin: FRONTEND_ORIGIN || "*" }));
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Server muvaffaqiyatli ishlayapti!");
+});
+
 // ============================================================
 // Yordamchi: userni upsert qilish (mavjud bo'lmasa yaratadi)
 // ============================================================
