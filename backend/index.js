@@ -150,6 +150,42 @@ bot.start(async (ctx) => {
 // ---------- /referral buyrug'i ----------
 bot.command("referral", sendReferralInfo);
 
+// ---------- /stats buyrug'i (Admin uchun) ----------
+bot.command("stats", async (ctx) => {
+  if (String(ctx.from.id) !== String(ADMIN_CHAT_ID)) return;
+  
+  const { count } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true });
+    
+  await ctx.reply(`📊 Bot statistikasi:\n\nJami foydalanuvchilar: ${count || 0} ta`);
+});
+
+// ---------- /send buyrug'i (Admin tarqatmasi) ----------
+bot.command("send", async (ctx) => {
+  if (String(ctx.from.id) !== String(ADMIN_CHAT_ID)) return;
+
+  const text = ctx.message.text.replace("/send", "").trim();
+  if (!text) {
+    return ctx.reply("⚠️ Xabar matnini kiriting!\nMasalan: /send Bugun yangi skinlar qo'shildi!");
+  }
+
+  const { data: users } = await supabase.from("users").select("telegram_id");
+  if (!users || users.length === 0) return ctx.reply("Foydalanuvchilar topilmadi.");
+
+  let success = 0;
+  for (const u of users) {
+    try {
+      await bot.telegram.sendMessage(u.telegram_id, text);
+      success++;
+    } catch (e) {
+      /* Botni bloklagan foydalanuvchilarni o'tkazib yuboradi */
+    }
+  }
+
+  await ctx.reply(`✅ Xabar ${success} ta foydalanuvchiga yuborildi!`);
+});
+
 // ============================================================
 // CALLBACK TUGMALAR — obunani tekshirish / taklif / admin tasdiqlash
 // ============================================================
