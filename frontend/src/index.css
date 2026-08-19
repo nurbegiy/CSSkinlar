@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Signature element: oktagon — CS2 case/qurol qutisi shaklidan ilhomlanган */
+.octagon {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+.card-surface {
+  background: linear-gradient(180deg, #171B21 0%, #12151A 100%);
+  border: 1px solid theme("colors.line");
+}
+
+/* Fokus holati — accessibility */
+:focus-visible {
+  outline: 2px solid theme("colors.gold");
+  outline-offset: 2px;
+}
+
+@keyframes spin-slow-decel {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(var(--spin-degrees)); }
+}
+
+.wheel-spin {
+  animation: spin-slow-decel 4.5s cubic-bezier(0.17, 0.67, 0.32, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wheel-spin {
+    animation-duration: 0.4s;
+  }
+}
