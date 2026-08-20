@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "./api.js";
+import { unlockAudio } from "./lib/sound.js";
 import BalanceHeader from "./components/BalanceHeader.jsx";
 import Wheel from "./components/Wheel.jsx";
 import Skins from "./components/Skins.jsx";
@@ -18,6 +19,13 @@ export default function App() {
       .then((res) => setUser(res.user))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
+
+    const unlock = () => {
+      unlockAudio();
+      window.removeEventListener("pointerdown", unlock);
+    };
+    window.addEventListener("pointerdown", unlock, { once: true });
+    return () => window.removeEventListener("pointerdown", unlock);
   }, []);
 
   function handleBalanceUpdate(newBalance, lastSpinAt) {
@@ -31,7 +39,10 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-muted">
-        Yuklanmoqda...
+        <div className="flex flex-col items-center gap-3">
+          <div className="octagon w-10 h-10 bg-surface2 border border-line animate-pulse" />
+          <p className="text-sm">Yuklanmoqda...</p>
+        </div>
       </div>
     );
   }
@@ -49,10 +60,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-28">
       <BalanceHeader user={user} />
 
-      <main className="px-5 flex flex-col gap-4">
+      <main key={tab} className="tab-enter px-5 pt-4 flex flex-col gap-4">
         {tab === "home" && <Wheel user={user} onBalanceUpdate={handleBalanceUpdate} />}
         {tab === "skins" && <Skins />}
         {tab === "withdraw" && <Withdraw user={user} onBalanceUpdate={handleBalanceUpdate} />}

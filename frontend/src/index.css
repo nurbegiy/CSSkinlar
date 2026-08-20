@@ -8,22 +8,99 @@ html, body, #root {
 
 body {
   -webkit-tap-highlight-color: transparent;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, rgba(228, 175, 68, 0.07), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(75, 105, 255, 0.06), transparent 55%),
+    #0A0C10;
+  background-attachment: fixed;
 }
 
-/* Signature element: oktagon — CS2 case/qurol qutisi shaklidan ilhomlanган */
+/* Signature shape: oktagon — CS2 case/qurol qutisi shaklidan ilhomlanган */
 .octagon {
   clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
 }
 
 .card-surface {
-  background: linear-gradient(180deg, #171B21 0%, #12151A 100%);
+  background: linear-gradient(180deg, rgba(26,31,39,0.92) 0%, rgba(18,21,27,0.92) 100%);
   border: 1px solid theme("colors.line");
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.02) inset, 0 12px 30px -14px rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+}
+
+.glass-panel {
+  background: rgba(26, 31, 39, 0.55);
+  border: 1px solid rgba(52, 60, 74, 0.6);
+  backdrop-filter: blur(10px);
 }
 
 /* Fokus holati — accessibility */
 :focus-visible {
   outline: 2px solid theme("colors.gold");
   outline-offset: 2px;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.press-scale {
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+.press-scale:active {
+  transform: scale(0.96);
+  filter: brightness(0.94);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: theme("colors.line");
+  border-radius: 999px;
+}
+
+/* Sahifa (tab) almashish animatsiyasi */
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tab-enter {
+  animation: tabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Lightbox / modal */
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.overlay-in {
+  animation: overlayIn 0.18s ease-out both;
+}
+.modal-in {
+  animation: modalIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.pulse-glow {
+  animation: pulseGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
 }
 
 @keyframes spin-slow-decel {
@@ -38,5 +115,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .wheel-spin {
     animation-duration: 0.4s;
+  }
+  .tab-enter, .modal-in, .overlay-in, .pulse-glow, .shimmer, .animate-floatSlow {
+    animation: none !important;
   }
 }
